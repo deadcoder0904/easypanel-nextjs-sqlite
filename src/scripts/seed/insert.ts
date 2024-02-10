@@ -1,17 +1,15 @@
 import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3'
-import crypto from 'crypto'
 
 import { db } from '@/app/db/index'
 import { userTable } from '@/app/db/schema'
+import { getId } from '@/app/lib/utils'
 
 const seedAdmin = async (db: BetterSQLite3Database<Record<string, never>>) => {
   const userData: (typeof userTable.$inferInsert)[] = [
-    { id: crypto.randomBytes(20).toString('base64url') },
-    { id: crypto.randomBytes(20).toString('base64url') },
+    { id: getId() },
+    { id: getId() },
   ]
-
   const users = await db.insert(userTable).values(userData).returning()
-
   console.log({ users })
 }
 
