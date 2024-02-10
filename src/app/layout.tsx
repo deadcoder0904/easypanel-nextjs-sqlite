@@ -4,7 +4,7 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Drizzle T3 OSS Env',
+  title: 'Easypanel Next.js SQLite',
   description: '',
 }
 

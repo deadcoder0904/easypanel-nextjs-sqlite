@@ -1,10 +1,6 @@
 import type { Config } from 'drizzle-kit'
 import { isLinux } from 'std-env'
 
-import { env } from '@/app/lib/env'
-
-console.log({ env })
-
 export const FINAL_DATABASE_PATH = isLinux
   ? `/app/${process.env.DATABASE_URL}`
   : `${process.env.DATABASE_URL}`
