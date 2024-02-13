@@ -7,6 +7,5 @@ import { getId } from '@/app/lib/utils'
 export const POST = async () => {
   const id = getId()
   const users = await db.insert(userTable).values({ id }).returning()
-
-  return NextResponse.json({ users })
+  return NextResponse.json({ type: '🧨 POST /api/add', users })
 }

@@ -1,16 +1,16 @@
 import type { Config } from 'drizzle-kit'
-import { isLinux } from 'std-env'
+import { isProduction } from 'std-env'
 
-export const FINAL_DATABASE_PATH = isLinux
-  ? `/app/${process.env.DATABASE_URL}`
-  : `${process.env.DATABASE_URL}`
+// import { env } from '@/app/lib/env'
+
+export const url = isProduction
+  ? `/data/${process.env.SQLITE_DATABASE_NAME}`
+  : `${process.env.SQLITE_DATABASE_NAME}`
 
 export default {
   schema: './src/app/db/schema.ts',
   out: './src/app/db/migrations',
   driver: 'better-sqlite',
-  dbCredentials: {
-    url: FINAL_DATABASE_PATH,
-  },
+  dbCredentials: { url },
   verbose: true,
 } satisfies Config

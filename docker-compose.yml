@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  docker-production:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: docker-production
+    ports:
+      - '3001:3000'
+    volumes:
+      - ./data:/data

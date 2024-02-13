@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 export const env = createEnv({
   server: {
-    DATABASE_URL: z.string(),
+    SQLITE_DATABASE_NAME: z.string(),
   },
   experimental__runtimeEnv: {},
 })
