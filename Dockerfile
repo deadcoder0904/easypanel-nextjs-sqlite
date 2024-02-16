@@ -21,10 +21,22 @@ RUN \
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
+
 COPY . .
+
 # This will do the trick, use the corresponding env file for each environment.
 COPY .env.production .env.production
+RUN ls
 RUN mkdir -p /data
+RUN ls
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+# Generate migration files
+RUN npm run db:generate
+# COPY /src/app/db/migrations ./migrations
+# Create /data/users.prod.sqlite using Volume Mount
+RUN npm run db:migrate:prod
+RUN ls
 RUN npm run build
 
 # 3. Production image, copy all the files and run next
@@ -32,6 +44,7 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
@@ -43,12 +56,14 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Move the drizzle directory to the runtime image
+COPY --from=builder --chown=nextjs:nodejs /app/src/app/db/migrations ./migrations
 
 USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
-ENV HOSTNAME localhost
+# ENV PORT 3000
+# ENV HOSTNAME localhost
 
 CMD ["node", "server.js"]

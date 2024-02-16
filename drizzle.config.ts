@@ -1,11 +1,8 @@
 import type { Config } from 'drizzle-kit'
-import { isProduction } from 'std-env'
 
 // import { env } from '@/app/lib/env'
 
-export const url = isProduction
-  ? `/data/${process.env.SQLITE_DATABASE_NAME}`
-  : `${process.env.SQLITE_DATABASE_NAME}`
+export const url = `${process.env.SQLITE_DATABASE_NAME}`
 
 export default {
   schema: './src/app/db/schema.ts',

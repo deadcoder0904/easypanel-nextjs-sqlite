@@ -5,7 +5,14 @@ import { userTable } from '@/app/db/schema'
 import { getId } from '@/app/lib/utils'
 
 export const POST = async () => {
+  const type = 'POST /api/add'
+  console.log(type)
   const id = getId()
-  const users = await db.insert(userTable).values({ id }).returning()
-  return NextResponse.json({ type: '🧨 POST /api/add', users })
+  try {
+    const users = await db.insert(userTable).values({ id }).returning()
+    return NextResponse.json({ type, users })
+  } catch (err) {
+    console.error(err)
+    return NextResponse.json({ type, err })
+  }
 }

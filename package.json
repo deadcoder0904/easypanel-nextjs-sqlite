@@ -11,14 +11,14 @@
     "clean": "rimraf .next",
     "db:push": "drizzle-kit push:sqlite",
     "db:generate": "drizzle-kit generate:sqlite",
+    "db:migrate": "node --import tsx --env-file .env.development ./src/scripts/drizzle-migrate.ts",
     "db:seed": "node --import tsx --env-file .env.development ./src/scripts/seed/insert.ts",
     "db:delete": "node --import tsx --env-file .env.development ./src/scripts/seed/delete.ts",
-    "db:migrate:dev": "node --import tsx --env-file .env.development ./src/scripts/drizzle-migrate.ts",
-    "db:migrate:vps": "tsx ./src/scripts/drizzle-migrate.ts"
+    "db:migrate:prod": "node --import tsx --env-file .env.production ./src/scripts/drizzle-migrate.ts"
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.9.2",
-    "better-sqlite3": "^9.4.0",
+    "better-sqlite3": "^9.4.1",
     "drizzle-orm": "^0.29.3",
     "jiti": "^1.21.0",
     "next": "14.1.0",

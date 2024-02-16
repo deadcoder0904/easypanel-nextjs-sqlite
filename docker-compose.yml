@@ -1,12 +1,15 @@
-version: '3'
+version: '3.8'
 
 services:
-  docker-production:
+  web:
     build:
       context: .
       dockerfile: Dockerfile
-    image: docker-production
+    image: easypanel-nextjs-sqlite
+    container_name: nextjs-sqlite-docker
+    env_file:
+      - .env.production
     ports:
-      - '3001:3000'
+      - 3000:3000
     volumes:
       - ./data:/data
