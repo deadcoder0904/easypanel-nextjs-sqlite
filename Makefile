@@ -1,6 +1,6 @@
 .PHONY: build-production
 build-production: ## Build the production docker image.
-	BUILDKIT_PROGRESS=plain docker compose build --no-cache
+	BUILDKIT_PROGRESS=plain docker compose build
 
 .PHONY: start-production
 start-production: ## Start the production docker container.

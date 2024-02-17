@@ -9,6 +9,8 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+COPY /src/app/db/migrations /app/migrations
+
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
@@ -26,17 +28,15 @@ COPY . .
 
 # This will do the trick, use the corresponding env file for each environment.
 COPY .env.production .env.production
-RUN ls
 RUN mkdir -p /data
-RUN ls
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 # Generate migration files
-RUN npm run db:generate
-# COPY /src/app/db/migrations ./migrations
+# RUN npm run db:generate
+RUN ls
+RUN ls ./src/app/db/migrations
 # Create /data/users.prod.sqlite using Volume Mount
 RUN npm run db:migrate:prod
-RUN ls
 RUN npm run build
 
 # 3. Production image, copy all the files and run next
@@ -57,7 +57,15 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Move the drizzle directory to the runtime image
-COPY --from=builder --chown=nextjs:nodejs /app/src/app/db/migrations ./migrations
+COPY --from=builder --chown=nextjs:nodejs /app/src/app/db/migrations /app/migrations
+# COPY --from=builder --chown=nextjs:nodejs /app/data /data
+
+# Move the run script and litestream config to the runtime image
+COPY --from=builder /app/scripts/run.sh run.sh
+RUN chmod +x run.sh
+
+# Create data directory or else `npm run db:migrate:prod` will fail with TypeError: Cannot open database because the directory does not exist
+# RUN mkdir -p /data
 
 USER nextjs
 
@@ -66,4 +74,6 @@ EXPOSE 3000
 # ENV PORT 3000
 # ENV HOSTNAME localhost
 
-CMD ["node", "server.js"]
+CMD ["npm", "run", "start"]
+# CMD ["node", "server.js"]
+# CMD ["sh", "run.sh"]

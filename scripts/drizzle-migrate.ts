@@ -1,17 +1,27 @@
+import sqlite from 'better-sqlite3'
+import { drizzle } from 'drizzle-orm/better-sqlite3'
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator'
 import path from 'node:path'
 import { isProduction } from 'std-env'
 
-import { db } from '@/app/db/index'
+// DO NOT IMPORT THE SAME CODE FROM `db` otherwise it fails on production
+const url = isProduction
+  ? `/data/${process.env.SQLITE_DATABASE_NAME}`
+  : `${process.env.SQLITE_DATABASE_NAME}`
+console.log(url)
+console.log(
+  isProduction
+    ? '/app/migrations'
+    : path.join(__dirname, '..', 'src/app/db/migrations')
+)
+const client = sqlite(url, { verbose: console.log })
+client.pragma('journal_mode = WAL') // see https://github.com/WiseLibs/better-sqlite3/blob/master/docs/performance.md
+const db = drizzle(client)
 
 async function main() {
-  // const migrationsFolder = isProduction
-  //   ? path.join(__dirname, '..', '..', './migrations')
-  //   : path.join(__dirname, '..', '/app/db/migrations')
-  console.log(path.join(__dirname, '..', '/app/db/migrations'))
   console.info(`Running migrations...`)
   migrate(db, {
-    migrationsFolder: path.join(__dirname, '..', '/app/db/migrations'),
+    migrationsFolder: path.join(__dirname, '..', 'src/app/db/migrations'),
   })
   console.info('Migrated successfully')
 
