@@ -16,3 +16,6 @@ NPM Scripts appended with `:prod` are production scripts and those without anyth
 ### Production Side
 
 1. `make build-production` to build a Docker Container for `production`
+2. `make start-production` to start the Docker Container
+3. `make stop-production` to stop the Docker Container
+4. `docker system prune -f && docker builder prune -f` to delete all images & container
