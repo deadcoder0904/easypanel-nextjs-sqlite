@@ -7,16 +7,10 @@ import { isProduction } from 'std-env'
 import { env } from '@/app/lib/env'
 
 const url = isProduction
-  ? `/data/${env.SQLITE_DATABASE_NAME}`
+  ? `./data/${env.SQLITE_DATABASE_NAME}`
   : `${env.SQLITE_DATABASE_NAME}`
 
 console.log(`ahoy!!`)
-console.log(
-  isProduction
-    ? '/app/migrations'
-    : path.join(__dirname, '..', 'src/app/db/migrations')
-)
-console.log(url)
 
 const client = sqlite(url, { verbose: console.log })
 client.pragma('journal_mode = WAL') // see https://github.com/WiseLibs/better-sqlite3/blob/master/docs/performance.md
