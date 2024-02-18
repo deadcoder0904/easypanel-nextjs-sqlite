@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-# echo "Migrating database..."
 # npm run db:migrate:prod & PID=$!
 # Wait for migration to finish
 # wait $PID

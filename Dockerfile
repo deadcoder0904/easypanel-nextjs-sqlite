@@ -28,15 +28,13 @@ COPY . .
 
 # This will do the trick, use the corresponding env file for each environment.
 COPY .env.production .env.production
-RUN mkdir -p data
+RUN mkdir -p /data
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-# Generate migration files
-# RUN npm run db:generate
 
 # Create /data/users.prod.sqlite using Volume Mount
-RUN npm run db:migrate:prod
+# RUN npm run db:migrate:prod
 RUN npm run build
 
 # 3. Production image, copy all the files and run next
@@ -50,7 +48,7 @@ RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
 COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/data ./data
+# COPY --from=builder --chown=nextjs:nodejs /data /data
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
@@ -61,6 +59,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/src/app/db/migrations ./migrations
 
 # Move the run script and litestream config to the runtime image
+COPY --from=builder /app/scripts/drizzle-migrate.mjs ./scripts/drizzle-migrate.mjs
 COPY --from=builder /app/scripts/run.sh ./run.sh
 RUN chmod +x run.sh
 
@@ -74,5 +73,5 @@ EXPOSE 3000
 # ENV PORT 3000
 # ENV HOSTNAME localhost
 
-
+# CMD ["npm", "run", "start"]
 CMD ["sh", "run.sh"]

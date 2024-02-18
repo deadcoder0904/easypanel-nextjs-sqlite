@@ -1,22 +1,24 @@
 {
   "name": "easypanel-nextjs-sqlite",
+  "type": "module",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "turbo": "next dev --turbo",
     "build": "next build",
-    "start": "next start",
+    "start": "npm run db:migrate:prod && next start",
     "lint": "next lint",
     "clean": "rimraf .next",
     "db:push": "drizzle-kit push:sqlite",
     "db:generate": "drizzle-kit generate:sqlite",
-    "db:migrate": "node --import tsx --env-file .env.development ./scripts/drizzle-migrate.ts",
+    "db:migrate": "node --env-file .env.development ./scripts/drizzle-migrate.mjs",
     "db:seed": "node --import tsx --env-file .env.development ./scripts/seed/insert.ts",
     "db:delete": "node --import tsx --env-file .env.development ./scripts/seed/delete.ts",
-    "db:migrate:prod": "node --import tsx --env-file .env.production ./scripts/drizzle-migrate.ts"
+    "db:migrate:prod": "node --env-file .env.production ./scripts/drizzle-migrate.mjs"
   },
   "dependencies": {
+    "@epic-web/remember": "^1.0.2",
     "@t3-oss/env-nextjs": "^0.9.2",
     "better-sqlite3": "^9.4.1",
     "drizzle-orm": "^0.29.3",

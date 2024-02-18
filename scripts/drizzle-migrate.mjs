@@ -6,9 +6,9 @@ import { isProduction } from 'std-env'
 
 // DO NOT IMPORT THE SAME CODE FROM `db` otherwise it fails on production
 const url = isProduction
-  ? `./data/${process.env.SQLITE_DATABASE_NAME}`
+  ? `/data/${process.env.SQLITE_DATABASE_NAME}`
   : `${process.env.SQLITE_DATABASE_NAME}`
-
+console.log({ url })
 const client = sqlite(url, { verbose: console.log })
 client.pragma('journal_mode = WAL') // see https://github.com/WiseLibs/better-sqlite3/blob/master/docs/performance.md
 const db = drizzle(client)
