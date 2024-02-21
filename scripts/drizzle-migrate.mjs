@@ -16,7 +16,9 @@ const db = drizzle(client)
 async function main() {
   console.info(`Running migrations...`)
   migrate(db, {
-    migrationsFolder: path.join(__dirname, '..', 'src/app/db/migrations'),
+    migrationsFolder: isProduction
+      ? `./migrations`
+      : path.join(__dirname, '..', 'src/app/db/migrations'),
   })
   console.info('Migrated successfully')
 

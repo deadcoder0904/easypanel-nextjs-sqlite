@@ -14,10 +14,8 @@ FROM base AS deps
 
 # Root user is implicit so you don't have to actually specify it. From https://stackoverflow.com/a/45553149/6141587
 # USER root
-# RUN mkdir -p /app
-# RUN chown -R node:node /app
 USER node
-# WORKDIR now sets correct permissions if you set USER first
+# WORKDIR now sets correct permissions if you set USER first so `USER node` has permissions on `/app` directory
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -50,8 +48,6 @@ RUN mkdir -p /data
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Create /data/users.prod.sqlite using Volume Mount
-# RUN npm run db:migrate:prod
 RUN pnpm build
 
 # 3. Production image, copy all the files and run next
@@ -61,12 +57,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# RUN addgroup -g 1001 -S nodejs
-# RUN adduser -S nextjs -u 1001
-
 COPY --from=builder --chown=node:node /app/public ./public
 COPY --from=production-deps --chown=node:node /app/node_modules ./node_modules
-# COPY --from=builder --chown=node:node /data /data
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
@@ -78,23 +70,9 @@ COPY --from=builder --chown=node:node /app/src/app/db/migrations ./migrations
 
 # Move the run script and litestream config to the runtime image
 COPY --from=builder --chown=node:node /app/scripts/drizzle-migrate.mjs ./scripts/drizzle-migrate.mjs
-# COPY --from=builder --chown=node:node /app/scripts/init.sh ./init.sh
 COPY --from=builder --chown=node:node /app/scripts/run.sh ./run.sh
-# RUN chmod +x init.sh
 RUN chmod +x run.sh
 
-# RUN chown -R node:node /app/node_modules
-# Create data directory or else `npm run db:migrate:prod` will fail with TypeError: Cannot open database because the directory does not exist
-# RUN mkdir -p /data
-
-# USER nextjs
-
 EXPOSE 3000
-
-# ENV PORT 3000
-# ENV HOSTNAME localhost
-
-# CMD ["npm", "run", "start"]
-# ENTRYPOINT ["init.sh"]
 
 CMD ["sh", "run.sh"]
