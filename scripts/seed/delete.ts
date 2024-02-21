@@ -1,7 +1,7 @@
 import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3'
 
-import { db } from '@/app/db/index'
-import { userTable } from '@/app/db/schema'
+import { db } from '@app/db/index'
+import { userTable } from '@app/db/schema'
 
 const cleanupDatabase = (db: BetterSQLite3Database<Record<string, never>>) => {
   try {

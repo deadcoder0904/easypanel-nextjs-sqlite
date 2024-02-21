@@ -9,6 +9,7 @@
     "build": "next build",
     "start": "npm run db:migrate:prod && next start",
     "lint": "next lint",
+    "knip": "knip",
     "clean": "rimraf .next",
     "db:push": "drizzle-kit push:sqlite",
     "db:generate": "drizzle-kit generate:sqlite",
@@ -36,6 +37,7 @@
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
     "drizzle-kit": "^0.20.14",
+    "knip": "^5.0.1",
     "rimraf": "^5.0.5",
     "typescript": "^5.3.3"
   }

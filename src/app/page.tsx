@@ -1,4 +1,4 @@
-import { ButtonComponent } from '@/app/components/ButtonComponent'
+import { ButtonComponent } from '@app/components/ButtonComponent'
 
 export default function Home() {
   return (

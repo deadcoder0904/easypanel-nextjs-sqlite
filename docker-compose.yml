@@ -4,8 +4,13 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile
-    image: easypanel-nextjs-sqlite
+      dockerfile: docker/web/Dockerfile
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
+    #   redis:
+    #     condition: service_started
+    image: easypanel-nextjs
     container_name: nextjs-sqlite-docker
     env_file:
       - .env.production
@@ -13,3 +18,10 @@ services:
       - 3000:3000
     volumes:
       - ./data:/data
+  # migration:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/migrations/Dockerfile
+  #   image: sqlite-migrations
+  #   depends_on:
+  #     - web

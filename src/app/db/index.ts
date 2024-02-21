@@ -5,7 +5,7 @@ import path from 'node:path'
 import { isProduction } from 'std-env'
 import { remember } from '@epic-web/remember'
 
-import { env } from '@/app/lib/env'
+import { env } from '@app/lib/env'
 
 const url = isProduction
   ? `/data/${env.SQLITE_DATABASE_NAME}`

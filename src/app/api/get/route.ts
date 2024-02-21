@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
-import { db } from '@/app/db/index'
-import { userTable } from '@/app/db/schema'
+import { db } from '@app/db/index'
+import { userTable } from '@app/db/schema'
 
 export const dynamic = 'force-dynamic'
 

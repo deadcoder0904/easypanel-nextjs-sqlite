@@ -1,8 +1,8 @@
 import type { Config } from 'drizzle-kit'
 
-// import { env } from '@/app/lib/env'
+import { env } from '@app/lib/env'
 
-export const url = `${process.env.SQLITE_DATABASE_NAME}`
+export const url = `${env.SQLITE_DATABASE_NAME}`
 
 export default {
   schema: './src/app/db/schema.ts',
