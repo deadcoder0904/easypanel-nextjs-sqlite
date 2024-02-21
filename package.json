@@ -7,7 +7,7 @@
     "dev": "next dev",
     "turbo": "next dev --turbo",
     "build": "next build",
-    "start": "npm run db:migrate:prod && next start",
+    "start": "next start",
     "lint": "next lint",
     "knip": "knip",
     "clean": "rimraf .next",
