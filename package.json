@@ -19,7 +19,6 @@
     "db:migrate:prod": "node --env-file .env.production ./scripts/drizzle-migrate.mjs"
   },
   "dependencies": {
-    "@epic-web/remember": "^1.0.2",
     "@t3-oss/env-nextjs": "^0.9.2",
     "better-sqlite3": "^9.4.1",
     "drizzle-orm": "^0.29.3",

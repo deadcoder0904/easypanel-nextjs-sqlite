@@ -1,7 +1,13 @@
 #!/bin/bash
 set -e
 
-npm run db:migrate:prod & PID=$!
+ls
+ls node_modules
+echo "PNPM Install..."
+pnpm install
+ls -al
+# Creates `data/users.prod.sqlite` using bind volume mount
+pnpm run db:migrate:prod & PID=$!
 # Wait for migration to finish
 wait $PID
 
