@@ -2,10 +2,10 @@ version: '3.8'
 
 services:
   web:
+    image: easypanel-nextjs:0.0.1
     build:
       context: .
       dockerfile: Dockerfile
-    image: easypanel-nextjs
     container_name: nextjs-sqlite
     env_file:
       - .env.production
@@ -13,4 +13,3 @@ services:
       - 3000:3000
     volumes:
       - ./data:/data
-      - /app/node_modules
