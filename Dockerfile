@@ -57,7 +57,6 @@ FROM base AS runner
 USER node
 WORKDIR /app
 
-# TODO: Try changing PORTS
 EXPOSE 3000
 
 ENV PORT 3000
