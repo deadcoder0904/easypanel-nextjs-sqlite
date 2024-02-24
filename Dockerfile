@@ -11,7 +11,6 @@ RUN pnpm fetch
 
 # 1. Install all dependencies including dev dependencies
 FROM base AS deps
-
 # Root user is implicit so you don't have to actually specify it. From https://stackoverflow.com/a/45553149/6141587
 # USER root
 USER node
@@ -24,13 +23,12 @@ COPY --chown=node:node /src/app/db/migrations ./migrations
 
 USER root
 RUN pnpm install
-USER node
 
 # 2. Setup production node_modules
 FROM base as production-deps
 WORKDIR /app
 
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps --chown=node:node /app/node_modules ./node_modules
 COPY --chown=node:node package.json pnpm-lock.yaml* ./
 RUN pnpm prune --prod
 
@@ -43,7 +41,11 @@ COPY --chown=node:node . .
 
 # This will do the trick, use the corresponding env file for each environment.
 COPY --chown=node:node .env.production .env.production
-RUN mkdir -p /data
+
+# Copied from https://stackoverflow.com/a/69867550/6141587
+USER root
+# Give /data directory correct permissions otherwise WAL mode won't work. It means you can't have 2 users writing to the database at the same time without this line as *.sqlite-wal & *.sqlite-shm are automatically created & deleted when *.sqlite is busy.
+RUN mkdir -p /data && chown -R node:node /data
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -52,8 +54,14 @@ RUN pnpm build
 
 # 3. Production image, copy all the files and run next
 FROM base AS runner
+USER node
 WORKDIR /app
 
+# TODO: Try changing PORTS
+EXPOSE 3000
+
+ENV PORT 3000
+ENV HOSTNAME '0.0.0.0'
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
@@ -72,7 +80,5 @@ COPY --from=builder --chown=node:node /app/src/app/db/migrations ./migrations
 COPY --from=builder --chown=node:node /app/scripts/drizzle-migrate.mjs ./scripts/drizzle-migrate.mjs
 COPY --from=builder --chown=node:node /app/scripts/run.sh ./run.sh
 RUN chmod +x run.sh
-
-EXPOSE 3000
 
 CMD ["sh", "run.sh"]

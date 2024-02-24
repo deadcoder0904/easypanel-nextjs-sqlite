@@ -19,3 +19,18 @@ NPM Scripts appended with `:prod` are production scripts and those without anyth
 2. `make start-production` to start the Docker Container
 3. `make stop-production` to stop the Docker Container
 4. `docker system prune -f && docker builder prune -f` to delete all images & container
+
+### SQLite WAL Mode Caveats
+
+I noticed SQLite WAL Mode on Docker Container doesn't work too well & results in data loss when opened in a file browser.
+
+Reproduction steps to see this issue after enabling WAL mode which is commented out in 2 places (search `journal_mode=WAL` in VSCode):
+
+1. Click `Add` in `localhost:3000`
+2. Click `Get All`
+3. Open the Desktop app `SQLite Database` by installing it from https://sqlitebrowser.org/
+4. Click `Add` again multiple times & try to refresh database inside `SQLite Database` Desktop app
+5. Notice, how the data doesn't update in the Desktop app but works fine in `localhost:3000`
+6. Now close the Docker Container resulting in a data loss
+
+For this reason, I'll be avoiding WAL mode for now. When the time comes & I need multiple writes, I'll use PostgreSQL instead of SQLite if I need multiple writers on a database but since the process of multiple writes is instantanious (milliseconds) so I'll be going with SQLite for now anyways.

@@ -2,8 +2,15 @@
 
 import React from 'react'
 
-export function ButtonComponent() {
+export function GetData() {
   const [json, setJSON] = React.useState({})
+
+  React.useEffect(() => {
+    async function main() {
+      await getAll()
+    }
+    main()
+  }, [])
 
   const handleAdd = async () => {
     const res = await fetch('/api/add', { method: 'POST' })
