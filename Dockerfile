@@ -4,7 +4,7 @@ FROM node:20-alpine AS base
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
-RUN corepack enable && corepack prepare pnpm@8.15.3 --activate 
+RUN corepack enable && corepack prepare pnpm@8.15.4 --activate 
 # set the store dir to a folder that is not in the project
 RUN pnpm config set store-dir ~/.pnpm-store
 RUN pnpm fetch
@@ -22,17 +22,9 @@ COPY --chown=node:node package.json pnpm-lock.yaml* ./
 COPY --chown=node:node /src/app/db/migrations ./migrations
 
 USER root
-RUN pnpm install
+RUN pnpm install --frozen-lockfile --prefer-offline
 
-# 2. Setup production node_modules
-FROM base as production-deps
-WORKDIR /app
-
-COPY --from=deps --chown=node:node /app/node_modules ./node_modules
-COPY --chown=node:node package.json pnpm-lock.yaml* ./
-RUN pnpm prune --prod
-
-# 3. Rebuild the source code only when needed
+# 2. Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps --chown=node:node /app/node_modules ./node_modules
@@ -65,7 +57,6 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
 COPY --from=builder --chown=node:node /app/public ./public
-COPY --from=production-deps --chown=node:node /app/node_modules ./node_modules
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
@@ -77,6 +68,8 @@ COPY --from=builder --chown=node:node /app/src/app/db/migrations ./migrations
 
 # Move the run script and litestream config to the runtime image
 COPY --from=builder --chown=node:node /app/scripts/drizzle-migrate.mjs ./scripts/drizzle-migrate.mjs
+COPY --from=builder --chown=node:node /app/scripts/package.json ./scripts/package.json
+COPY --from=builder --chown=node:node /app/scripts/pnpm-lock.yaml ./scripts/pnpm-lock.yaml
 COPY --from=builder --chown=node:node /app/scripts/run.sh ./run.sh
 RUN chmod +x run.sh
 
