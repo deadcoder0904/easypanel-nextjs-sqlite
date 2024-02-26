@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Only install dependencies for drizzle migration. Those are not bundled via `next build` as its optimized to only install dependencies that are used`
+# Only install dependencies for drizzle migration. Those are not bundled via `next build` as its optimized to only install dependencies that are used in next.js app
 echo "Installing production dependencies"
 cd scripts
 pnpm config set store-dir ~/.pnpm-store
