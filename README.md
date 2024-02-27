@@ -4,6 +4,8 @@
 
 In real app, do not commit `.env.development` & `.env.production` to source control like Git. Add it to `.gitignore` & `.dockerignore` or better yet use [dotenvx](https://dotenvx.com) for environment variables.
 
+Create `.env.development` & `.env.production` using `.env.example` format.
+
 NPM Scripts appended with `:prod` are production scripts and those without anything appended are scripts to be used in development.
 
 ### Development Side
