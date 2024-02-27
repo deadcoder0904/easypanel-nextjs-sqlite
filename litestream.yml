@@ -1,0 +1,8 @@
+dbs:
+  - path: /data/${SQLITE_DATABASE_NAME}
+    replicas:
+      - type: s3
+        endpoint: ${REPLICA_URL}
+        bucket: ${REPLICA_BUCKET_NAME}
+        access-key-id: ${CLOUDFLARE_R2_ACCESS_KEY_ID}
+        secret-access-key: ${CLOUDFLARE_R2_SECRET_ACCESS_KEY}

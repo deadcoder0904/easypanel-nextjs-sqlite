@@ -66,7 +66,12 @@ COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 # Move the drizzle directory to the runtime image
 COPY --from=builder --chown=node:node /app/src/app/db/migrations ./migrations
 
-# Move the run script and litestream config to the runtime image
+# Move the litestream binary to the runtime image from the litestream image
+# You can use a specific version of litestream by changing the tag
+# COPY --from=litestream/litestream:0.3.13 /usr/local/bin/litestream /usr/local/bin/litestream
+COPY --from=litestream/litestream:latest --chown=node:node /usr/local/bin/litestream /usr/local/bin/litestream
+COPY --from=builder --chown=node:node /app/litestream.yml /etc/litestream.yml
+
 COPY --from=builder --chown=node:node /app/scripts/drizzle-migrate.mjs ./scripts/drizzle-migrate.mjs
 COPY --from=builder --chown=node:node /app/scripts/package.json ./scripts/package.json
 COPY --from=builder --chown=node:node /app/scripts/pnpm-lock.yaml ./scripts/pnpm-lock.yaml
