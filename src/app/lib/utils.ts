@@ -1,4 +1,3 @@
-import crypto from 'node:crypto'
+import { randFullName } from '@ngneat/falso'
 
-export const getId = (len: number = 20) =>
-  crypto.randomBytes(len).toString('base64url')
+export const randomNameGenerator = () => randFullName()

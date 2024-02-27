@@ -4,9 +4,13 @@ set -e
 # Set the directory of the database in a variable
 DB_PATH=/data/users.prod.sqlite
 
-# Copied from https://pranavmalvawala.com/run-script-only-on-first-start-up
+# Set to true only when you want to run the migrate script, i.e, when changing database schema
+# Automate it by only setting it to true by tracking `entries.idx` in `migrations/meta/_journal.json`
+MIGRATE_DATABASE=false
+
+# Inspired by https://pranavmalvawala.com/run-script-only-on-first-start-up & https://serverfault.com/a/1134812/1078165
 CONTAINER_FIRST_STARTUP="CONTAINER_FIRST_STARTUP"
-if [ ! -e /data/$CONTAINER_FIRST_STARTUP ]; then
+if [[ ! -e /data/$CONTAINER_FIRST_STARTUP || $MIGRATE_DATABASE ]]; then
 	# Place your script that you only want to run on first startup.
   echo 'Initialize database first time only'
 	touch /data/$CONTAINER_FIRST_STARTUP
