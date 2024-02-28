@@ -4,6 +4,16 @@ set -e
 # Set the directory of the database in a variable
 DB_PATH=/data/users.prod.sqlite
 
+# This should be before running migrations otherwise it results in empty database after `rm -rf ./data`
+# Restore the database if it does not already exist.
+if [ -f $DB_PATH ]; then
+	echo "Database already exists, skipping restore"
+else
+	echo "No database found, restoring from replica if exists"
+	# Restore backup from litestream if backup exists
+	litestream restore -if-replica-exists $DB_PATH
+fi
+
 # Set to true only when you want to run the migrate script, i.e, when changing database schema
 # Automate it by only setting it to true by tracking `entries.idx` in `migrations/meta/_journal.json`
 MIGRATE_DATABASE=false
@@ -27,15 +37,6 @@ if [[ ! -e /data/$CONTAINER_FIRST_STARTUP ]] || [[ $MIGRATE_DATABASE = true ]]; 
 	pnpm db:migrate:prod & PID=$!
 	# Wait for migration to finish
 	wait $PID
-fi
-
-# Restore the database if it does not already exist.
-if [ -f $DB_PATH ]; then
-	echo "Database already exists, skipping restore"
-else
-	echo "No database found, restoring from replica if exists"
-	# Restore backup from litestream if backup exists
-	litestream restore -if-replica-exists $DB_PATH
 fi
 
 echo "Starting production server..."

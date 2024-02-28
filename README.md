@@ -24,14 +24,14 @@ NPM Scripts appended with `:prod` are production scripts and those without anyth
 
 ### SQLite WAL Mode Caveats
 
-I noticed SQLite WAL Mode on Docker Container doesn't work too well & results in data loss when opened in a file browser.
+I noticed SQLite WAL Mode on Docker Container doesn't work too well & results in data loss when the `*.sqlite` file is opened in a database browser like `SQLite Database` Desktop App.
 
-Reproduction steps to see this issue after enabling WAL mode which is commented out in 2 places (search `journal_mode=WAL` in VSCode):
+Reproduction steps (you have to remove litestream specific code as WAL mode works with Litestream... see below) to see this issue after enabling WAL mode in 2 places (search `journal_mode=WAL` in VSCode):
 
 1. Click `Add` in `localhost:3000`
 2. Click `Get All`
-3. Open the Desktop app `SQLite Database` by installing it from https://sqlitebrowser.org/
-4. Click `Add` again multiple times & try to refresh database inside `SQLite Database` Desktop app
+3. Open the Desktop App `SQLite Database` by installing it from https://sqlitebrowser.org/
+4. Click `Add` again multiple times & try to refresh database inside `SQLite Database` Desktop App
 5. Notice, how the data doesn't update in the Desktop app but works fine in `localhost:3000`
 6. Now close the Docker Container resulting in a data loss
 
