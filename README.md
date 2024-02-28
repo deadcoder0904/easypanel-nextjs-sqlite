@@ -37,7 +37,7 @@ Reproduction steps to see this issue after enabling WAL mode which is commented 
 
 For this reason, I'll be avoiding WAL mode for now. When the time comes & I need multiple writes, I'll use PostgreSQL instead of SQLite if I need multiple writers on a database but since the process of multiple writes is instantanious (milliseconds) so I'll be going with SQLite for now anyways.
 
-#### SQLite WAL Mode now works when used in combination with Litestream
+### SQLite WAL Mode now works when used in combination with Litestream
 
 I repeated the above 6 steps exactly as specified & there was no data loss.
 
