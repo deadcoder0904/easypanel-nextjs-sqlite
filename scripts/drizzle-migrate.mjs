@@ -11,9 +11,9 @@ const url = isProduction
 console.log({ url })
 const client = sqlite(url, { verbose: console.log })
 // use sqlite pragma. recommended from https://cj.rs/blog/sqlite-pragma-cheatsheet-for-performance-and-consistency/
-// client.pragma('journal_mode=WAL') // see https://github.com/WiseLibs/better-sqlite3/blob/master/docs/performance.md
-// client.pragma('synchronous=normal')
-// client.pragma('foreign_keys=on')
+client.pragma('journal_mode=WAL') // see https://github.com/WiseLibs/better-sqlite3/blob/master/docs/performance.md
+client.pragma('synchronous=normal')
+client.pragma('foreign_keys=on')
 const db = drizzle(client)
 
 async function main() {

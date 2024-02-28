@@ -36,3 +36,20 @@ Reproduction steps to see this issue after enabling WAL mode which is commented 
 6. Now close the Docker Container resulting in a data loss
 
 For this reason, I'll be avoiding WAL mode for now. When the time comes & I need multiple writes, I'll use PostgreSQL instead of SQLite if I need multiple writers on a database but since the process of multiple writes is instantanious (milliseconds) so I'll be going with SQLite for now anyways.
+
+#### SQLite WAL Mode now works when used in combination with Litestream
+
+I repeated the above 6 steps exactly as specified & there was no data loss.
+
+I guess Litestream wrote it to its WAL Mode & when it found a wrong pointer, Litestream restored the database.
+
+This was the log from Litestream that got me to this conclusion:
+
+```bash
+time=2024-02-28T05:44:50.247Z level=WARN msg="init: cannot determine last wal position, clearing generation" db=/data/users.prod.sqlite error="primary wal header: EOF"
+time=2024-02-28T05:44:50.406Z level=INFO msg="sync: new generation" db=/data/users.prod.sqlite generation=ab8dd20a19bb28f7 reason="no generation exists"
+time=2024-02-28T05:44:51.298Z level=INFO msg="write snapshot" db=/data/users.prod.sqlite replica=s3 position=ab8dd20a19bb28f7/00000000:4152
+time=2024-02-28T05:44:51.720Z level=INFO msg="snapshot written" db=/data/users.prod.sqlite replica=s3 position=ab8dd20a19bb28f7/00000000:4152 elapsed=422.755427ms sz=1512
+time=2024-02-28T05:44:52.234Z level=INFO msg="write wal segment" db=/data/users.prod.sqlite replica=s3 position=ab8dd20a19bb28f7/00000000:0
+time=2024-02-28T05:44:52.602Z level=INFO msg="wal segment written" db=/data/users.prod.sqlite replica=s3 position=ab8dd20a19bb28f7/00000000:0 elapsed=367.834931ms sz=4152
+```
