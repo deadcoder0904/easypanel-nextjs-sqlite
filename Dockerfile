@@ -23,10 +23,15 @@ COPY --chown=node:node /src/app/db/migrations ./migrations
 
 USER root
 RUN pnpm install --frozen-lockfile --prefer-offline
+RUN pnpm install sharp@0.32.6
 
 # 2. Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+# Inspired by https://github.com/vercel/next.js/discussions/36935
+RUN mkdir -p /app/.next/cache && chown -R node:node /app/.next/cache
+# Persist the next cache in a volume
+VOLUME ["/app/.next/cache"]
 COPY --from=deps --chown=node:node /app/node_modules ./node_modules
 
 COPY --chown=node:node . .
