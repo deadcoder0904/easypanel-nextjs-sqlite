@@ -2,12 +2,9 @@ import sqlite from 'better-sqlite3'
 import { drizzle } from 'drizzle-orm/better-sqlite3'
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator'
 import path from 'node:path'
-import { isProduction } from 'std-env'
 
 // DO NOT IMPORT THE SAME CODE FROM `db` otherwise it fails on production
-const url = isProduction
-  ? `/data/${process.env.SQLITE_DATABASE_NAME}`
-  : `${process.env.SQLITE_DATABASE_NAME}`
+const url = `/data/${process.env.SQLITE_DATABASE_NAME}`
 console.log({ url })
 const client = sqlite(url, { verbose: console.log })
 // use sqlite pragma. recommended from https://cj.rs/blog/sqlite-pragma-cheatsheet-for-performance-and-consistency/
@@ -18,11 +15,7 @@ const db = drizzle(client)
 
 async function main() {
   console.info(`Running migrations...`)
-  migrate(db, {
-    migrationsFolder: isProduction
-      ? `./migrations`
-      : path.join(__dirname, '..', 'src/app/db/migrations'),
-  })
+  migrate(db, { migrationsFolder: `./migrations` })
   console.info('Migrated successfully')
 
   process.exit(0)

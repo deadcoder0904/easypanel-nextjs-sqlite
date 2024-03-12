@@ -19,11 +19,11 @@ fi
 MIGRATE_DATABASE=false
 
 # Inspired by https://pranavmalvawala.com/run-script-only-on-first-start-up & https://serverfault.com/a/1134812/1078165
-CONTAINER_FIRST_STARTUP="CONTAINER_FIRST_STARTUP"
-if [[ ! -e /data/$CONTAINER_FIRST_STARTUP ]] || [[ $MIGRATE_DATABASE = true ]]; then
+FIRST_TIME_MIGRATION_PROD="FIRST_TIME_MIGRATION_PROD"
+if [[ ! -e /data/$FIRST_TIME_MIGRATION_PROD ]] || [[ $MIGRATE_DATABASE = true ]]; then
 	# Place your script that you only want to run on first startup.
   echo 'Initialize database first time only'
-	touch /data/$CONTAINER_FIRST_STARTUP
+	touch /data/$FIRST_TIME_MIGRATION_PROD
 
 	# Only install dependencies for drizzle migration. Those are not bundled via `next build` as its optimized to only install dependencies that are used in next.js app
 	echo "Installing production dependencies"
@@ -33,7 +33,7 @@ if [[ ! -e /data/$CONTAINER_FIRST_STARTUP ]] || [[ $MIGRATE_DATABASE = true ]]; 
 	pnpm install --prod --prefer-offline
 	cd ..
 
-	echo "Creating '/data/users.prod.sqlite' using bind volume mount"
+	echo "Migrating '/data/users.prod.sqlite'"
 	pnpm db:migrate:prod & PID=$!
 	# Wait for migration to finish
 	wait $PID

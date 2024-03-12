@@ -80,7 +80,7 @@ COPY --from=builder --chown=node:node /app/litestream.yml /etc/litestream.yml
 COPY --from=builder --chown=node:node /app/scripts/drizzle-migrate.mjs ./scripts/drizzle-migrate.mjs
 COPY --from=builder --chown=node:node /app/scripts/package.json ./scripts/package.json
 COPY --from=builder --chown=node:node /app/scripts/pnpm-lock.yaml ./scripts/pnpm-lock.yaml
-COPY --from=builder --chown=node:node /app/scripts/run.sh ./run.sh
-RUN chmod +x run.sh
+COPY --from=builder --chown=node:node /app/scripts/run.prod.sh ./run.prod.sh
+RUN chmod +x run.prod.sh
 
-CMD ["sh", "run.sh"]
+CMD ["sh", "run.prod.sh"]

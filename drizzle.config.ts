@@ -1,6 +1,7 @@
 import type { Config } from 'drizzle-kit'
 import * as dotenv from 'dotenv'
 
+// bug in drizzle: see https://github.com/drizzle-team/drizzle-orm/issues/1228
 // import { env } from '@app/lib/env'
 
 dotenv.config({ path: '.env.development' })
@@ -10,7 +11,7 @@ if (!process.env.SQLITE_DATABASE_NAME) {
 }
 
 // only ran in development so no need to dd a production check
-export const url = `${process.env.SQLITE_DATABASE_NAME}`
+const url = `${process.env.SQLITE_DATABASE_NAME}`
 
 export default {
   schema: './src/app/db/schema.ts',

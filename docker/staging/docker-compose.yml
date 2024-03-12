@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7.2.4-alpine
+    container_name: en_redis_staging
+    env_file:
+      - ../../.env.staging
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --save 60 1 --loglevel warning --requirepass 422af0c647e8c81cf20e
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 30s
+      retries: 50
+    volumes:
+      - redis_data:/data
+  web:
+    image: easypanel-nextjs:0.0.1
+    build:
+      context: ../../
+      dockerfile: docker/staging/Dockerfile
+    container_name: en_staging
+    env_file:
+      - ../../.env.staging
+    ports:
+      - 3000:3000
+    volumes:
+      - ../../data:/data
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+volumes:
+  redis_data:
+    driver: local
