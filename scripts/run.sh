@@ -4,7 +4,7 @@ set -e
 # Set the directory of the database in a variable
 DB_PATH=/data/users.$MODE.sqlite
 
-if [ $MODE != 'development' ]; then
+if [ $MODE != "development" ]; then
 	# This should be before running migrations otherwise it results in empty database after `rm -rf ./data`
 	# Restore the database if it does not already exist.
 	if [ -f $DB_PATH ]; then
@@ -24,10 +24,10 @@ MIGRATE_DATABASE=false
 FIRST_TIME_MIGRATION="FIRST_TIME_MIGRATION_$MODE"
 if [[ ! -e /data/$FIRST_TIME_MIGRATION ]] || [[ $MIGRATE_DATABASE = true ]]; then
 	# Place your script that you only want to run on first startup.
-  echo 'Initialize database first time only'
+  echo "Initialize database first time only"
 	touch /data/$FIRST_TIME_MIGRATION
 
-	if [ $MODE != 'development' ]; then
+	if [ $MODE != "development" ]; then
 		# Only install dependencies for drizzle migration. Those are not bundled via `next build` as its optimized to only install dependencies that are used in next.js app
 		echo "Installing $MODE dependencies"
 		cd scripts
@@ -37,12 +37,12 @@ if [[ ! -e /data/$FIRST_TIME_MIGRATION ]] || [[ $MIGRATE_DATABASE = true ]]; the
 		cd ..
 	fi
 
-	echo "Migrating '/data/users.$MODE.sqlite'"
-	if [ $MODE = 'production' ]; then
+	echo "Migrating /data/users.$MODE.sqlite"
+	if [ $MODE = "production" ]; then
 		pnpm db:migrate:prod & PID=$!
 		# Wait for migration to finish
 		wait $PID
-	elif [ $MODE = 'staging' ]; then
+	elif [ $MODE = "staging" ]; then
 		pnpm db:migrate:staging & PID=$!
 		wait $PID
 	else
@@ -53,7 +53,7 @@ fi
 
 echo "Starting $MODE server..."
 
-if [ $MODE = 'development' ]; then
+if [ $MODE = "development" ]; then
 	pnpm dev
 else
 	# Run litestream with your app as the subprocess.
