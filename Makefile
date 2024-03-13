@@ -10,16 +10,16 @@ start-dev: ## Start the development docker container.
 stop-dev: ## Stop the development docker container.
 	BUILDKIT_PROGRESS=plain docker compose -f docker/development/docker-compose.yml down
 
-.PHONY: build-stag
-build-stag: ## Build the staging docker image.
+.PHONY: build-staging
+build-staging: ## Build the staging docker image.
 	BUILDKIT_PROGRESS=plain docker compose -f docker/staging/docker-compose.yml build
 
-.PHONY: start-stag
-start-stag: ## Start the staging docker container.
+.PHONY: start-staging
+start-staging: ## Start the staging docker container.
 	BUILDKIT_PROGRESS=plain docker compose -f docker/staging/docker-compose.yml up -d
 
-.PHONY: stop-stag
-stop-stag: ## Stop the staging docker container.
+.PHONY: stop-staging
+stop-staging: ## Stop the staging docker container.
 	BUILDKIT_PROGRESS=plain docker compose -f docker/staging/docker-compose.yml down
 
 .PHONY: build-prod

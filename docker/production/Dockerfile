@@ -19,7 +19,7 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY --chown=node:node package.json pnpm-lock.yaml* ./
-COPY --chown=node:node /src/app/db/migrations ./migrations
+COPY --chown=node:node . .
 
 USER root
 RUN pnpm install --frozen-lockfile --prefer-offline
@@ -37,13 +37,14 @@ COPY --from=deps --chown=node:node /app/node_modules ./node_modules
 COPY --chown=node:node . .
 
 # This will do the trick, use the corresponding env file for each environment.
-COPY --chown=node:node .env.production .env.production
+COPY --chown=node:node .env* ./
 
 # Copied from https://stackoverflow.com/a/69867550/6141587
 USER root
 # Give /data directory correct permissions otherwise WAL mode won't work. It means you can't have 2 users writing to the database at the same time without this line as *.sqlite-wal & *.sqlite-shm are automatically created & deleted when *.sqlite is busy.
 RUN mkdir -p /data && chown -R node:node /data
 
+# set to production otherwise it throws error ⚠ You are using a non-standard "NODE_ENV" value in your environment. This creates inconsistencies in the project and is strongly advised against. Read more: https://nextjs.org/docs/messages/non-standard-node-env
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -68,19 +69,10 @@ COPY --from=builder --chown=node:node /app/public ./public
 COPY --from=builder --chown=node:node /app/.next/standalone ./
 COPY --from=builder --chown=node:node /app/.next/static ./.next/static
 
-# Move the drizzle directory to the runtime image
-COPY --from=builder --chown=node:node /app/src/app/db/migrations ./migrations
-
 # Move the litestream binary to the runtime image from the litestream image
 # You can use a specific version of litestream by changing the tag
 # COPY --from=litestream/litestream:0.3.13 /usr/local/bin/litestream /usr/local/bin/litestream
 COPY --from=litestream/litestream:latest --chown=node:node /usr/local/bin/litestream /usr/local/bin/litestream
 COPY --from=builder --chown=node:node /app/litestream.yml /etc/litestream.yml
 
-COPY --from=builder --chown=node:node /app/scripts/drizzle-migrate.mjs ./scripts/drizzle-migrate.mjs
-COPY --from=builder --chown=node:node /app/scripts/package.json ./scripts/package.json
-COPY --from=builder --chown=node:node /app/scripts/pnpm-lock.yaml ./scripts/pnpm-lock.yaml
-COPY --from=builder --chown=node:node /app/scripts/run.prod.sh ./run.prod.sh
-RUN chmod +x run.prod.sh
-
-CMD ["sh", "run.prod.sh"]
+COPY --from=builder --chown=node:node /app/scripts ./scripts

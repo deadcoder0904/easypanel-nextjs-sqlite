@@ -8,8 +8,7 @@
   },
   "dependencies": {
     "better-sqlite3": "^9.4.3",
-    "drizzle-orm": "^0.29.4",
-    "std-env": "^3.7.0"
+    "drizzle-orm": "^0.30.1"
   },
   "keywords": [],
   "author": "",
