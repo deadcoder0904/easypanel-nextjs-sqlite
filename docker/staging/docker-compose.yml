@@ -9,7 +9,6 @@ services:
     restart: always
     ports:
       - 6379:6379
-    command: redis-server --save 60 1 --loglevel warning --requirepass 422af0c647e8c81cf20e
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
       interval: 5s
@@ -17,12 +16,12 @@ services:
       retries: 50
     volumes:
       - redis_data:/data
+    command: redis-server --save 60 1 --loglevel warning --requirepass 422af0c647e8c81cf20e
   web:
     image: easypanel-nextjs:0.0.1
     build:
       context: ../../
       dockerfile: docker/production/Dockerfile
-    command: sh -c "sh ./scripts/run.sh"
     container_name: en_staging
     env_file:
       - ../../.env.staging
@@ -34,6 +33,7 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+    command: sh -c "sh ./scripts/run.sh"
 volumes:
   redis_data:
     driver: local

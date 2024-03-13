@@ -23,7 +23,6 @@ services:
       context: ../../
       dockerfile: docker/production/Dockerfile
       target: dev
-    command: sh -c "sh ./scripts/run.sh"
     container_name: en_dev
     env_file:
       - ../../.env.development
@@ -35,6 +34,7 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+    command: sh -c "sh ./scripts/run.sh"
 volumes:
   redis_data:
     driver: local
