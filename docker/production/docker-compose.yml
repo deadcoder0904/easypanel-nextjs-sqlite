@@ -22,7 +22,7 @@ services:
     build:
       context: ../../
       dockerfile: docker/production/Dockerfile
-    command: sh -c "sh ./scripts/run.prod.sh"
+    command: sh -c "sh ./scripts/run.sh"
     container_name: en_prod
     env_file:
       - ../../.env.production

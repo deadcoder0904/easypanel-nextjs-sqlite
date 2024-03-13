@@ -21,9 +21,9 @@ services:
     image: easypanel-nextjs:0.0.1
     build:
       context: ../../
-      dockerfile: docker/staging/Dockerfile
-      target: deps
-    command: sh -c "sh ./scripts/run.dev.sh"
+      dockerfile: docker/production/Dockerfile
+      target: dev
+    command: sh -c "sh ./scripts/run.sh"
     container_name: en_dev
     env_file:
       - ../../.env.development

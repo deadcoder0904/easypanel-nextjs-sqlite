@@ -10,7 +10,7 @@ RUN pnpm config set store-dir ~/.pnpm-store
 RUN pnpm fetch
 
 # 1. Install all dependencies including dev dependencies
-FROM base AS deps
+FROM base AS dev
 # Root user is implicit so you don't have to actually specify it. From https://stackoverflow.com/a/45553149/6141587
 # USER root
 USER node
@@ -20,6 +20,9 @@ WORKDIR /app
 # Install dependencies based on the preferred package manager
 COPY --chown=node:node package.json pnpm-lock.yaml* ./
 COPY --chown=node:node . .
+
+ENV NODE_ENV development
+ENV NEXT_TELEMETRY_DISABLED 1
 
 USER root
 RUN pnpm install --frozen-lockfile --prefer-offline
@@ -32,7 +35,7 @@ WORKDIR /app
 RUN mkdir -p /app/.next/cache && chown -R node:node /app/.next/cache
 # Persist the next cache in a volume
 VOLUME ["/app/.next/cache"]
-COPY --from=deps --chown=node:node /app/node_modules ./node_modules
+COPY --from=dev --chown=node:node /app/node_modules ./node_modules
 
 COPY --chown=node:node . .
 
@@ -62,12 +65,16 @@ ENV HOSTNAME 0.0.0.0
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
+COPY --from=builder --chown=node:node /app/.env* ./
 COPY --from=builder --chown=node:node /app/public ./public
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=node:node /app/.next/standalone ./
 COPY --from=builder --chown=node:node /app/.next/static ./.next/static
+
+# Move the drizzle directory to the runtime image
+COPY --from=builder --chown=node:node /app/src/app/db/migrations ./migrations
 
 # Move the litestream binary to the runtime image from the litestream image
 # You can use a specific version of litestream by changing the tag

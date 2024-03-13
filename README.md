@@ -8,6 +8,11 @@ Create `.env.development` & `.env.production` using `.env.example` format.
 
 NPM Scripts appended with `:prod` are production scripts and those without anything appended are scripts to be used in development.
 
+### TODOS
+
+- [x] Use just 1 `run.sh` file with a bunch of if-else scripts
+- [ ] Get `development/Dockerfile` to support HMR
+
 ### Development Side
 
 1. `pnpm db:generate` generates migration files for `development` at `/src/app/db/migrations`

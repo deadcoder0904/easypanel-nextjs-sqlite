@@ -17,7 +17,10 @@ const db = drizzle(client)
 
 async function main() {
   console.info(`Running migrations...`)
-  const migrationsFolder = path.join(__dirname, '..', 'src/app/db/migrations')
+  const migrationsFolder =
+    process.env.MODE === 'development'
+      ? path.join(__dirname, '..', 'src/app/db/migrations')
+      : './migrations' // for next.js standalone mode
   migrate(db, { migrationsFolder })
   console.info('Migrated successfully')
 
