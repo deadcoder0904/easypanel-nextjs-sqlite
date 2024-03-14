@@ -1,22 +1,6 @@
 version: '3.8'
 
 services:
-  redis:
-    image: redis:7.2.4-alpine
-    container_name: en_redis_prod
-    env_file:
-      - ../../.env.production
-    restart: always
-    ports:
-      - 6379:6379
-    healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
-      interval: 5s
-      timeout: 30s
-      retries: 50
-    volumes:
-      - redis_data:/data
-    command: redis-server --save 60 1 --loglevel warning --requirepass 422af0c647e8c81cf20e
   web:
     image: easypanel-nextjs:0.0.1
     build:
@@ -30,10 +14,4 @@ services:
     volumes:
       - ../../data:/data
     restart: unless-stopped
-    depends_on:
-      redis:
-        condition: service_healthy
     command: sh -c "sh ./scripts/run.sh"
-volumes:
-  redis_data:
-    driver: local
