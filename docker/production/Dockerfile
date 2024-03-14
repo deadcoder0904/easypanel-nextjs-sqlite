@@ -6,8 +6,8 @@ FROM node:20-alpine AS base
 RUN apk add --no-cache libc6-compat
 RUN corepack enable && corepack prepare pnpm@8.15.4 --activate
 
-# 1. Install all dependencies including dev dependencies
-FROM base AS dev
+# 1. Install all dependencies including devDependencies
+FROM base AS development
 # Root user is implicit so you don't have to actually specify it. From https://stackoverflow.com/a/45553149/6141587
 # USER root
 USER node
@@ -32,7 +32,8 @@ RUN mkdir -p /data && chown -R node:node /data
 
 USER node
 RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm install --frozen-lockfile --recursive --prefer-offline
-RUN pnpm install sharp@0.33.2
+# Install native node_modules in Dockerfile so it uses pnpm's supportedArchitectures feature in package.json. sharp is required only if you use next/image optimization while better-sqlite3 is used in the app itself
+RUN pnpm install sharp@0.33.2 better-sqlite3@9.4.3
 
 # 2. Rebuild the source code only when needed
 FROM base AS builder
@@ -41,7 +42,7 @@ WORKDIR /app
 RUN mkdir -p /app/.next/cache && chown -R node:node /app/.next/cache
 # Persist the next cache in a volume
 VOLUME ["/app/.next/cache"]
-COPY --from=dev --chown=node:node /app/node_modules ./node_modules
+COPY --from=development --chown=node:node /app/node_modules ./node_modules
 
 COPY --chown=node:node . .
 

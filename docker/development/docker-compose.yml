@@ -6,14 +6,14 @@ services:
     build:
       context: ../../
       dockerfile: docker/production/Dockerfile
-      target: dev
+      target: development
     container_name: en_dev
     env_file:
       - ../../.env.development
     ports:
       - 3000:3000
     volumes:
-      - .:/app
+      # - .:/app
       - ../../data:/data
     restart: unless-stopped
-    command: sh -c "ls -al; sh ./scripts/run.sh;"
+    command: sh -c "sh ./scripts/run.sh"
