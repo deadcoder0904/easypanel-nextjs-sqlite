@@ -32,8 +32,8 @@ RUN mkdir -p /data && chown -R node:node /data
 
 USER node
 RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm install --frozen-lockfile --recursive --prefer-offline
-# Install native node_modules in Dockerfile so it uses pnpm's supportedArchitectures feature in package.json. sharp is required only if you use next/image optimization while better-sqlite3 is used in the app itself
-RUN pnpm install sharp@0.33.2 better-sqlite3@9.4.3
+# Install native node_modules in Dockerfile so it uses pnpm's supportedArchitectures feature in package.json. sharp is required only if you use next/image optimization
+RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm install sharp@0.33.2 --recursive --prefer-offline
 
 # 2. Rebuild the source code only when needed
 FROM base AS builder
