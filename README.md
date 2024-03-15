@@ -6,6 +6,8 @@ In real app, do not commit `.env.development` & `.env.production` to source cont
 
 Create `.env.development` & `.env.production` using `.env.example` format.
 
+> NOTE: `SQLITE_DATABASE_NAME` should be equal to `users.${MODE}.sqlite` where `MODE` is an environment variable in `.env.*` as it is referenced in `run.sh`. For example, don't use `SQLITE_DATABASE_NAME=users.dev.sqlite` in `.env.development` if you are using `MODE=development` in the same file. You have to either use `MODE=dev` or `SQLITE_DATABASE_NAME=users.development.sqlite`. I like using long-form.
+
 NPM Scripts appended with `:prod` are production scripts and those without anything appended are scripts to be used in development.
 
 ### TODOS
