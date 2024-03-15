@@ -10,8 +10,7 @@ NPM Scripts appended with `:prod` are production scripts and those without anyth
 
 ### TODOS
 
-- [x] Use just 1 `run.sh` file with a bunch of if-else scripts
-- [ ] Get `development/Dockerfile` to support HMR
+- [ ] Get `development/Dockerfile` to support HMR (Currently, Dockerfile in development does not work)
 
 ### Development Side
 
