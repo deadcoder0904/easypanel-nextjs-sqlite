@@ -14,4 +14,3 @@ services:
     volumes:
       - ../../data:/data
     restart: unless-stopped
-    command: sh -c "sh ./scripts/run.sh"

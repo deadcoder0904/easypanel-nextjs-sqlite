@@ -85,3 +85,5 @@ COPY --from=litestream/litestream:latest --chown=node:node /usr/local/bin/litest
 COPY --from=builder --chown=node:node /app/litestream.yml /etc/litestream.yml
 
 COPY --from=builder --chown=node:node /app/scripts ./scripts
+
+CMD ["sh", "./scripts/run.sh"]
