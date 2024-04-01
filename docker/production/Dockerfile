@@ -10,6 +10,7 @@ RUN corepack enable && corepack prepare pnpm@8.15.5 --activate
 USER root
 # Give /data directory correct permissions otherwise WAL mode won't work. It means you can't have 2 users writing to the database at the same time without this line as *.sqlite-wal & *.sqlite-shm are automatically created & deleted when *.sqlite is busy.
 RUN mkdir -p /data && chown -R node:node /data
+VOLUME ["/data"]
 
 # 1. Install all dependencies including devDependencies
 FROM base AS development
