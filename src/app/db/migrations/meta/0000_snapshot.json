@@ -1,14 +1,14 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "fc517c98-8089-42cf-b391-e1b3aa95abda",
+  "id": "1bad64f4-65f8-4cb2-bf5a-2aaaff3984e0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "user": {
       "name": "user",
       "columns": {
-        "id": {
-          "name": "id",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": true,
           "notNull": true,

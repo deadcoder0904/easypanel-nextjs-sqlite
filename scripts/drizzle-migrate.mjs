@@ -7,11 +7,15 @@ import path from 'node:path'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+if (!process.env.SQLITE_DATABASE_PATH) {
+  throw new Error('process.env.SQLITE_DATABASE_PATH is undefined.')
+}
+
 // DO NOT IMPORT THE SAME CODE FROM `db` otherwise it fails on production
 const url =
   process.env.MODE === 'development'
-    ? path.join(__dirname, '../', './data', process.env.SQLITE_DATABASE_NAME)
-    : `/data/${process.env.SQLITE_DATABASE_NAME}`
+    ? path.join(__dirname, '../', process.env.SQLITE_DATABASE_PATH)
+    : process.env.SQLITE_DATABASE_PATH
 console.log({ url })
 const client = sqlite(url, { verbose: console.log })
 // use sqlite pragma. recommended from https://cj.rs/blog/sqlite-pragma-cheatsheet-for-performance-and-consistency/

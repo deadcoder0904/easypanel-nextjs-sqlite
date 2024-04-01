@@ -6,12 +6,12 @@ import * as dotenv from 'dotenv'
 
 dotenv.config({ path: '.env.development' })
 
-if (!process.env.SQLITE_DATABASE_NAME) {
-  throw Error(`process.env.SQLITE_DATABASE_NAME isn't set!`)
+if (!process.env.SQLITE_DATABASE_PATH) {
+  throw Error(`process.env.SQLITE_DATABASE_PATH isn't set!`)
 }
 
 // only ran in development so no need to dd a production check
-const url = `${process.env.SQLITE_DATABASE_NAME}`
+const url = `${process.env.SQLITE_DATABASE_PATH}`
 
 export default {
   schema: './src/app/db/schema.ts',

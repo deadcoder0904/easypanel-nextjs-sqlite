@@ -59,3 +59,13 @@ time=2024-02-28T05:44:51.720Z level=INFO msg="snapshot written" db=/data/users.p
 time=2024-02-28T05:44:52.234Z level=INFO msg="write wal segment" db=/data/users.prod.sqlite replica=s3 position=ab8dd20a19bb28f7/00000000:0
 time=2024-02-28T05:44:52.602Z level=INFO msg="wal segment written" db=/data/users.prod.sqlite replica=s3 position=ab8dd20a19bb28f7/00000000:0 elapsed=367.834931ms sz=4152
 ```
+
+#### Easypanel Volume Mount
+
+1. Go to `Storage` > Click `Add Volume Mount` > Put `Name` as anything and `Mount Path` as `/etc/easypanel/projects/[project]/[services]/volumes/data/`
+2. Use `/data` as directory
+
+Hypothesis:
+
+1. Use `/etc/easypanel/projects/[project]/[services]/volumes/data/` as `Data Path`
+2. Use `/data` as directory

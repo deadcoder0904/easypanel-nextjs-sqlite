@@ -1,18 +1,15 @@
 #!/usr/bin/env sh
 set -e
 
-# Set the directory of the database in a variable
-DB_PATH=/data/users.$MODE.sqlite
-
 if [ $MODE != "development" ]; then
 	# This should be before running migrations otherwise it results in empty database after `rm -rf ./data`
 	# Restore the database if it does not already exist.
-	if [ -f $DB_PATH ]; then
+	if [ -f $SQLITE_DATABASE_PATH ]; then
 		echo "Database already exists, skipping restore"
 	else
 		echo "No database found, restoring from replica if exists"
 		# Restore backup from litestream if backup exists
-		litestream restore -if-replica-exists $DB_PATH
+		litestream restore -if-replica-exists $SQLITE_DATABASE_PATH
 	fi
 fi
 

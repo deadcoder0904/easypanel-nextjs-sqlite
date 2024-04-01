@@ -4,7 +4,12 @@ FROM node:20-alpine AS base
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
-RUN corepack enable && corepack prepare pnpm@8.15.4 --activate
+RUN corepack enable && corepack prepare pnpm@8.15.5 --activate
+
+# Copied from https://stackoverflow.com/a/69867550/6141587
+USER root
+# Give /data directory correct permissions otherwise WAL mode won't work. It means you can't have 2 users writing to the database at the same time without this line as *.sqlite-wal & *.sqlite-shm are automatically created & deleted when *.sqlite is busy.
+RUN mkdir -p /data && chown -R node:node /data
 
 # 1. Install all dependencies including devDependencies
 FROM base AS development
@@ -25,12 +30,6 @@ COPY --chown=node:node . .
 ENV NODE_ENV development
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Copied from https://stackoverflow.com/a/69867550/6141587
-USER root
-# Give /data directory correct permissions otherwise WAL mode won't work. It means you can't have 2 users writing to the database at the same time without this line as *.sqlite-wal & *.sqlite-shm are automatically created & deleted when *.sqlite is busy.
-RUN mkdir -p /data && chown -R node:node /data
-
-USER node
 RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm install --frozen-lockfile --recursive --prefer-offline
 # Install native node_modules in Dockerfile so it uses pnpm's supportedArchitectures feature in package.json. sharp is required only if you use next/image optimization
 RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm install sharp@0.33.2 --recursive --prefer-offline

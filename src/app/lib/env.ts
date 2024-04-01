@@ -4,8 +4,8 @@ import { z } from 'zod'
 
 export const env = createEnv({
   server: {
-    MODE: z.enum(['development', 'production']),
-    SQLITE_DATABASE_NAME: z.string(),
+    MODE: z.enum(['development', 'production', 'staging']),
+    SQLITE_DATABASE_PATH: z.string(),
   },
   experimental__runtimeEnv: {},
 })

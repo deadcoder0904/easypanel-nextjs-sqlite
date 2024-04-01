@@ -10,8 +10,8 @@ import { env } from '@app/lib/env'
 
 const url =
   env.MODE === 'development'
-    ? path.join(__dirname, '../../../', './data', env.SQLITE_DATABASE_NAME)
-    : `/data/${env.SQLITE_DATABASE_NAME}`
+    ? path.join(__dirname, '../../../', env.SQLITE_DATABASE_PATH)
+    : env.SQLITE_DATABASE_PATH
 
 console.log(`ahoy!! using ${url}`)
 
