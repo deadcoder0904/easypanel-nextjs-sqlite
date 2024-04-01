@@ -28,7 +28,7 @@ build-prod: ## Build the production docker image.
 
 .PHONY: start-prod
 start-prod: ## Start the production docker container.
-	docker run -d -p 3000:3000 -v ./_data:/data --env-file .env.production --restart unless-stopped easypanel-nextjs:0.0.1
+	docker run -d -p 3000:3000 -v ./_data:/data --env-file .env --restart unless-stopped easypanel-nextjs:0.0.1
 
 .PHONY: stop-prod
 stop-prod: ## Stop the production docker container.

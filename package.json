@@ -17,7 +17,7 @@
     "db:delete": "node --import tsx --env-file .env.development ./scripts/seed/delete.ts",
     "db:migrate:dev": "node --env-file .env.development ./scripts/drizzle-migrate.mjs",
     "db:migrate:staging": "node --env-file .env.staging ./scripts/drizzle-migrate.mjs",
-    "db:migrate:prod": "node --env-file .env.production ./scripts/drizzle-migrate.mjs"
+    "db:migrate:prod": "node --env-file .env ./scripts/drizzle-migrate.mjs"
   },
   "dependencies": {
     "@ngneat/falso": "^7.2.0",
