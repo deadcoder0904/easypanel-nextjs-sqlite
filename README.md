@@ -10,9 +10,13 @@ Create `.env.development` & `.env.production` using `.env.example` format.
 
 NPM Scripts appended with `:prod` are production scripts and those without anything appended are scripts to be used in development.
 
+Use `/data` in `.env.production` like `SQLITE_DATABASE_PATH=/data/users.production.sqlite` & setup Cloudflare environment variables to have Database Backups using Litestream.
+
 ### TODOS
 
-- [ ] Get `development/Dockerfile` to support HMR (Currently, Dockerfile in development does not work)
+- [ ] Get `development/Dockerfile` to support HMR (Currently, Dockerfile in development does not work but `pnpm dev` is much better anyways)
+
+> Note: If you need Redis, then only setup Redis in Docker & use local development environment for HMR as setting docker in development is very tedious & useless (at least it was in my case.)
 
 ### Development Side
 
@@ -27,6 +31,14 @@ NPM Scripts appended with `:prod` are production scripts and those without anyth
 2. `make start-production` to start the Docker Container
 3. `make stop-production` to stop the Docker Container
 4. `docker system prune -f && docker builder prune -f` to delete all images & container
+
+### Hosting on Easypanel
+
+1. Go to `Environment` & paste `.env.production` into `Environment Variables` & check `Create .env file` to create `.env` file.
+2. Change port to `3001` as specified in `Dockerfile`. Go into `Domains`, click on `Edit` button, change `Internal Port` to `3001`. Make sure to use Custom Domain as Easypanel currently isn't working on `*.easypanel.host` domains.
+3. Go to `Source`, add `Github` credentials, choose `Dockerfile` & paste `docker/production/Dockerfile` as the location.
+4. Enable `Auto Deploy` by checking the box besides `Destroy` (delete icon) button.
+5. Finally, click on `Deploy` to launch it.
 
 ### SQLite WAL Mode Caveats
 
@@ -69,3 +81,9 @@ Hypothesis:
 
 1. Use `/etc/easypanel/projects/[project]/[services]/volumes/data/` as `Data Path`
 2. Use `/data` as directory
+
+#### Easypanel Port fix
+
+I used `Domains > Port` & added `3001` as internal port on my custom domain & it worked. It didn't work on `*.easypanel.host` domain for some reason.
+
+I had `Mounts > Add Volume Mount` set to `data` as `Name` & `/data` as `Mount Path` which I don't think is needed if I use `VOLUMES ["/data"]` in `Dockerfile`.
