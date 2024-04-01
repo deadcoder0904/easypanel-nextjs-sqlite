@@ -15,6 +15,7 @@ Use `/data` in `.env.production` like `SQLITE_DATABASE_PATH=/data/users.producti
 ### TODOS
 
 - [ ] Get `development/Dockerfile` to support HMR (Currently, Dockerfile in development does not work but `pnpm dev` is much better anyways)
+- [ ] Switch back to using `docker-compose.yml` for `development` & `staging` as docker compose doesn't work only in production on a VPS like Easypanel. Most of the changes were in Dockerfile & Easypanel Settings so all the complexity isn't needed at all.
 
 > Note: If you need Redis, then only setup Redis in Docker & use local development environment for HMR as setting docker in development is very tedious & useless (at least it was in my case.)
 
