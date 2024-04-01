@@ -74,6 +74,7 @@ COPY --from=builder --chown=node:node /app/public ./public
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=node:node /app/.next/standalone ./
 COPY --from=builder --chown=node:node /app/.next/static ./.next/static
+COPY --from=builder --chown=node:node /app/.next/cache ./.next/cache
 
 # Move the drizzle directory to the runtime image
 COPY --from=builder --chown=node:node /app/src/app/db/migrations ./migrations
